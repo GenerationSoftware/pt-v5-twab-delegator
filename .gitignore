@@ -10,4 +10,5 @@ out/
 
 .DS_Store
 .envrc
+lcov.info
 node_modules
