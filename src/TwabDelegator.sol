@@ -564,7 +564,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
     bytes4 _selector = _twabController.delegate.selector;
     bytes memory _data = abi.encodeWithSelector(_selector, address(_vault), _delegatee);
 
-    _executeCall(_delegation, _data);
+    _executeCall(_delegation, address(_twabController), _data);
   }
 
   /**
@@ -577,21 +577,23 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
     bytes4 _selector = _vault.transfer.selector;
     bytes memory _data = abi.encodeWithSelector(_selector, _to, _amount);
 
-    _executeCall(_delegation, _data);
+    _executeCall(_delegation, address(_vault), _data);
   }
 
   /**
    * @notice Execute a function call on the delegation contract.
    * @param _delegation Address of the delegation contract
+   * @param _to The address that will be called
    * @param _data The call data that will be executed
    * @return The return datas from the calls
    */
   function _executeCall(
     Delegation _delegation,
+    address _to,
     bytes memory _data
   ) internal returns (bytes[] memory) {
     Delegation.Call[] memory _calls = new Delegation.Call[](1);
-    _calls[0] = Delegation.Call({ to: address(_vault), data: _data });
+    _calls[0] = Delegation.Call({ to: _to, data: _data });
 
     return _delegation.executeCalls(_calls);
   }
