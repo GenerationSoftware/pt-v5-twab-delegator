@@ -9,8 +9,8 @@
 [submodule "lib/pt-v5-vault"]
 	path = lib/pt-v5-vault
 	url = https://github.com/GenerationSoftware/pt-v5-vault
-	branch = prod-deploy-1
+	branch = prod-testnet-2
 [submodule "lib/pt-v5-twab-controller"]
 	path = lib/pt-v5-twab-controller
 	url = https://github.com/GenerationSoftware/pt-v5-twab-controller
-	branch = prod-deploy-1
+	branch = main
