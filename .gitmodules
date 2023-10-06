@@ -13,4 +13,4 @@
 [submodule "lib/pt-v5-twab-controller"]
 	path = lib/pt-v5-twab-controller
 	url = https://github.com/GenerationSoftware/pt-v5-twab-controller
-	branch = main
+	branch = prod-testnet-2
