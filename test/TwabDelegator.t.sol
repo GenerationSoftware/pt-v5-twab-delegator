@@ -123,11 +123,15 @@ contract TwabDelegatorTest is Helpers {
 
     yieldVault = new ERC4626Mock(address(underlyingAsset));
 
+    vm.mockCall(
+      address(prizePool),
+      abi.encodeWithSelector(bytes4(keccak256("twabController()"))),
+      abi.encode(twabController)
+    );
     vault = new Vault(
       underlyingAsset,
       vaultName,
       vaultSymbol,
-      twabController,
       yieldVault,
       prizePool,
       claimer,
