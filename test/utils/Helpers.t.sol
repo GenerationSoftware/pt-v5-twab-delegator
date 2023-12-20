@@ -7,7 +7,7 @@ import { Clones } from "openzeppelin/proxy/Clones.sol";
 import { IERC20 } from "openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Permit } from "openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
 
-import { Vault } from "pt-v5-vault/Vault.sol";
+import { VaultV2 as Vault } from "pt-v5-vault/Vault.sol";
 
 import { Delegation } from "../../src/Delegation.sol";
 import { TwabDelegator } from "../../src/TwabDelegator.sol";
