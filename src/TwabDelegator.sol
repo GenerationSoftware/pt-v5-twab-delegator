@@ -9,7 +9,6 @@ import { IERC4626 } from "openzeppelin/interfaces/IERC4626.sol";
 import { Address } from "openzeppelin/utils/Address.sol";
 
 import { TwabController } from "pt-v5-twab-controller/TwabController.sol";
-import { Vault } from "pt-v5-vault/Vault.sol";
 
 import { Delegation } from "./Delegation.sol";
 import { LowLevelDelegator } from "./LowLevelDelegator.sol";
@@ -38,7 +37,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
    * @notice Emitted when Vault associated with this contract has been set.
    * @param vault Address of the Vault
    */
-  event VaultSet(Vault indexed vault);
+  event VaultSet(IERC20 indexed vault);
 
   /**
    * @notice Emitted when Vault shares have been staked.
@@ -157,7 +156,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
   /* ============ Variables ============ */
 
   /// @notice Vault to which this contract is tied to.
-  Vault private immutable _vault;
+  IERC20 private immutable _vault;
 
   /// @notice TwabController to which this contract is tied to.
   TwabController private immutable _twabController;
@@ -185,7 +184,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
     string memory name_,
     string memory symbol_,
     TwabController twabController_,
-    Vault vault_
+    IERC20 vault_
   ) LowLevelDelegator() ERC20(name_, symbol_) {
     require(address(twabController_) != address(0), "TD/twabController-not-zero-addr");
     require(address(vault_) != address(0), "TD/vault-not-zero-addr");
@@ -208,7 +207,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
   function stake(address _to, uint256 _amount) external {
     _requireAmountGtZero(_amount);
 
-    IERC20(_vault).safeTransferFrom(msg.sender, address(this), _amount);
+    _vault.safeTransferFrom(msg.sender, address(this), _amount);
     _mint(_to, _amount);
 
     emit VaultSharesStaked(_to, _amount);
@@ -226,7 +225,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
 
     _burn(msg.sender, _amount);
 
-    IERC20(_vault).safeTransfer(_to, _amount);
+    _vault.safeTransfer(_to, _amount);
 
     emit VaultSharesUnstaked(msg.sender, _to, _amount);
   }
@@ -320,7 +319,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
     _requireAmountGtZero(_amount);
 
     Delegation _delegation = Delegation(_computeAddress(_delegator, _slot));
-    IERC20(_vault).safeTransferFrom(msg.sender, address(_delegation), _amount);
+    _vault.safeTransferFrom(msg.sender, address(_delegation), _amount);
 
     emit DelegationFunded(_delegator, _slot, _amount, msg.sender);
 
@@ -349,7 +348,7 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
 
     _burn(_delegator, _amount);
 
-    IERC20(_vault).safeTransfer(address(_delegation), _amount);
+    _vault.safeTransfer(address(_delegation), _amount);
 
     emit DelegationFundedFromStake(_delegator, _slot, _amount, msg.sender);
 

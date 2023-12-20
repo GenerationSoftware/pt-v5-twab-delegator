@@ -6,7 +6,7 @@ import { console2 } from "forge-std/console2.sol";
 import { ERC4626Mock, IERC20, IERC20Metadata } from "openzeppelin/mocks/ERC4626Mock.sol";
 
 import { TwabController } from "pt-v5-twab-controller/TwabController.sol";
-import { ERC20, PrizePool, Vault } from "pt-v5-vault/Vault.sol";
+import { ERC20, PrizePool, VaultV2 as Vault } from "pt-v5-vault/Vault.sol";
 
 import { ERC20PermitMock } from "./contracts/mock/ERC20PermitMock.sol";
 
