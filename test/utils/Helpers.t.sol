@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.24;
 
 import { Test } from "forge-std/Test.sol";
 
@@ -7,7 +7,7 @@ import { Clones } from "openzeppelin/proxy/Clones.sol";
 import { IERC20 } from "openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Permit } from "openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
 
-import { VaultV2 as Vault } from "pt-v5-vault/Vault.sol";
+import { PrizeVault as Vault } from "pt-v5-vault/PrizeVault.sol";
 
 import { Delegation } from "../../src/Delegation.sol";
 import { TwabDelegator } from "../../src/TwabDelegator.sol";

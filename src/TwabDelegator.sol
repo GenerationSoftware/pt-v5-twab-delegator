@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.24;
 
 import { Clones } from "openzeppelin/proxy/Clones.sol";
 import { ERC20, IERC20 } from "openzeppelin/token/ERC20/ERC20.sol";
@@ -8,7 +8,7 @@ import { SafeERC20 } from "openzeppelin/token/ERC20/utils/SafeERC20.sol";
 import { IERC4626 } from "openzeppelin/interfaces/IERC4626.sol";
 import { Address } from "openzeppelin/utils/Address.sol";
 
-import { TwabController } from "pt-v5-twab-controller/TwabController.sol";
+import { TwabController, SPONSORSHIP_ADDRESS } from "pt-v5-twab-controller/TwabController.sol";
 
 import { Delegation } from "./Delegation.sol";
 import { LowLevelDelegator } from "./LowLevelDelegator.sol";
@@ -191,6 +191,10 @@ contract TwabDelegator is ERC20, LowLevelDelegator, PermitAndMulticall {
 
     _twabController = twabController_;
     _vault = vault_;
+
+    // We don't want any latent vault tokens to cause this contract to win unrecoverable
+    // prizes, so we will sponsor the vault to ensure this contract can't win prizes.
+    twabController_.delegate(address(_vault), SPONSORSHIP_ADDRESS);
 
     emit TwabControllerSet(twabController_);
     emit VaultSet(vault_);

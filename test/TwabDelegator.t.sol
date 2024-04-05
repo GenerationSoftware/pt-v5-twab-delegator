@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.24;
 
 import { console2 } from "forge-std/console2.sol";
 
 import { ERC4626Mock, IERC20, IERC20Metadata } from "openzeppelin/mocks/ERC4626Mock.sol";
 
-import { TwabController } from "pt-v5-twab-controller/TwabController.sol";
-import { ERC20, PrizePool, VaultV2 as Vault } from "pt-v5-vault/Vault.sol";
+import { TwabController, SPONSORSHIP_ADDRESS } from "pt-v5-twab-controller/TwabController.sol";
+import { ERC20, PrizePool, PrizeVault as Vault } from "pt-v5-vault/PrizeVault.sol";
 
 import { ERC20PermitMock } from "./contracts/mock/ERC20PermitMock.sol";
 
@@ -24,6 +24,8 @@ contract TwabDelegatorTest is Helpers {
   event VaultSharesStaked(address indexed delegator, uint256 amount);
 
   event VaultSharesUnstaked(address indexed delegator, address indexed recipient, uint256 amount);
+
+  event Delegated(address indexed vault, address indexed delegator, address indexed delegate);
 
   event DelegationCreated(
     address indexed delegator,
@@ -85,8 +87,6 @@ contract TwabDelegatorTest is Helpers {
   address public bob;
   uint256 public bobPrivateKey;
 
-  address public constant SPONSORSHIP_ADDRESS = address(1);
-
   Vault public vault;
   string public vaultName = "PoolTogether aEthDAI Prize Token (PTaEthDAI)";
   string public vaultSymbol = "PTaEthDAI";
@@ -129,7 +129,6 @@ contract TwabDelegatorTest is Helpers {
       abi.encode(twabController)
     );
     vault = new Vault(
-      underlyingAsset,
       vaultName,
       vaultSymbol,
       yieldVault,
@@ -137,6 +136,7 @@ contract TwabDelegatorTest is Helpers {
       claimer,
       address(this),
       0,
+      1e5,
       address(this)
     );
 
@@ -152,9 +152,12 @@ contract TwabDelegatorTest is Helpers {
 
   function testConstructor() public {
     vm.expectEmit();
-
-    emit VaultSet(vault);
+    // (pre-computed TwabDelegator address)
+    emit Delegated(address(vault), address(0x1d1499e622D69689cdf9004d05Ec547d650Ff211), SPONSORSHIP_ADDRESS);
+    vm.expectEmit();
     emit TwabControllerSet(twabController);
+    vm.expectEmit();
+    emit VaultSet(vault);
 
     TwabDelegator testTwabDelegator = new TwabDelegator(
       twabDelegatorName,
