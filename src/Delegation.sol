@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.24;
 
 /**
  * @title Contract instantiated via CREATE2 to handle a Delegation by a delegator to a delegatee.
